@@ -3,7 +3,7 @@
 > **I built my own Jarvis — and locked it down like a vault.**
 > A voice-driven personal AI butler for Windows, with a 3D galaxy of your notes as its brain and security designed in from the first line.
 
-Status: design, before any code. This repo stays **private** until the release checklist at the bottom is done.
+Status: version 1 built (core + security, osint, workspace and phone level 1). The repo stays **private** until the release checklist at the bottom is done.
 
 ---
 
@@ -166,14 +166,20 @@ The docs page lists every risk (exposure beyond localhost, the Tailscale account
 
 ## 12. Release checklist (before making the repo public)
 
-- [ ] Every file written for this repo; nothing copied over from a personal install
-- [ ] No personal data anywhere: names, e-mail addresses, Apple ID, user names in paths, site names, Wi-Fi names, device names
-- [ ] Secret scan of the whole history (e.g. gitleaks) comes back clean
-- [ ] Commits use the GitHub no-reply address only
-- [ ] `config.example.json` holds placeholders only
-- [ ] Demo data is fictional (Ember & Oak) and contains nothing real
-- [ ] Third-party licences checked (three.js, 3d-force-graph: MIT)
-- [ ] Every module off by default; each module page says what leaves the PC
-- [ ] Tests pass on a clean machine
-- [ ] README: headline, GIF, Claude-account note, Marvel disclaimer, MIT licence
-- [ ] Issues: decide on or off, and a SECURITY.md saying how to report a vulnerability privately
+Run on 2026-11-19 against a fresh clone and the full git history.
+
+- [x] Every file written for this repo; nothing copied over from a personal install
+- [x] No personal data anywhere, in any commit (names, e-mail addresses, user names in paths, Wi-Fi and device names): scanned
+- [x] No secret-looking strings in the history (API keys, tokens, private keys, app passwords): scanned with patterns
+- [ ] **A dedicated secret scanner before publishing**: `gitleaks detect --source . --log-opts=--all` (install from github.com/gitleaks/gitleaks)
+- [x] Commits use the GitHub no-reply address only
+- [x] No config, key, database or data/ file was ever committed
+- [x] `config.example.json` holds placeholders only; every module off by default
+- [x] Demo data is fictional (Ember & Oak, example.com addresses); screenshots and the GIF carry no metadata
+- [x] Third-party licences: three.js and 3d-force-graph, both MIT, credited in the README
+- [x] Each module page says what leaves the PC
+- [x] Tests pass on a fresh clone (55 offline tests); a fresh clone without a lock serves nothing but the set-up page
+- [x] README: headline, demo GIF, Claude-account note, Marvel disclaimer, MIT licence
+- [x] SECURITY.md: private vulnerability reporting
+- [ ] **Your decisions**: issues on or off; then, on GitHub after publishing: Settings → Code security → turn on *Private vulnerability reporting*, *Secret scanning* and *Push protection*
+- [ ] **Your call**: Settings → General → Change visibility → Public
