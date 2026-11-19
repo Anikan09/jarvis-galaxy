@@ -154,7 +154,7 @@
     const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
       map: glow(), color: dim ? '#3a5260' : groupColor(n.group), transparent: true,
       blending: THREE.AdditiveBlending, depthWrite: false, opacity: dim ? 0.5 : 1 }));
-    const size = 10 + Math.sqrt(n.degree + 1) * 7 + (lit.has(n.id) ? 10 : 0);
+    const size = 10 + Math.sqrt(n.degree + 1) * 7 + (lit.has(n.id) ? 4 : 0);
     sprite.scale.set(size, size, 1);
     return sprite;
   }
@@ -179,7 +179,7 @@
     if (graph) flyTo(n);
   }
   function flyTo(n) {
-    const d = 90, r = 1 + d / Math.hypot(n.x || 1, n.y || 1, n.z || 1);
+    const d = 260, r = 1 + d / Math.hypot(n.x || 1, n.y || 1, n.z || 1);
     graph.cameraPosition({ x: (n.x || 0) * r, y: (n.y || 0) * r, z: (n.z || 0) * r }, n, 1200);
   }
   async function loadGraph() {
@@ -329,7 +329,14 @@
   tick();
   setInterval(tick, 1000 * 15);
   initGraph();
-  loadMode().then(loadGraph);
+  loadMode().then(loadGraph).then(() => {
+    // Demo mode only: /?ask=… asks it once the galaxy has settled (for screenshots and the README GIF). Never on a real Jarvis.
+    const q = new URLSearchParams(location.search).get('ask');
+    if (q && mode.demo) {
+      document.body.classList.add('still');               // screenshots: no half-finished slides
+      setTimeout(() => ask(q.slice(0, 300)), 2500);
+    }
+  });
   loadActivity();
   setInterval(loadGraph, 20 * 1000);
   setInterval(loadMode, 60 * 1000);

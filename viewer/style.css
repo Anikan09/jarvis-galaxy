@@ -111,3 +111,4 @@ h2 { margin: 0 0 10px; font: 600 11px/1 var(--mono); letter-spacing: 4px; text-t
 
 @media (max-width: 900px) { #left { display: none; } #drawer { width: calc(100% - 32px); } }
 @media (prefers-reduced-motion: reduce) { #drawer { transition: none; } }
+.still #drawer, .still .dial .arc { transition: none !important; }

@@ -4,7 +4,9 @@
 
 A voice-driven personal AI butler for Windows, with a 3D galaxy of your notes as its brain and security designed in from the first line.
 
-> Version 1 is feature-complete and being polished before release. The plan lives in [docs/DESIGN.md](docs/DESIGN.md).
+![Jarvis Galaxy in demo mode: the notes galaxy, an answer lighting up its sources, the security score, a Wi-Fi check, a phishing check and the morning briefing](docs/images/demo.gif)
+
+<sub>Demo mode, on a made-up coffee roaster. Everything you see runs on your own PC, behind your own lock.</sub>
 
 ## What it does
 
@@ -53,6 +55,10 @@ No third-party Python packages: the core is standard library only.
 ## Docs
 
 [Setup](docs/setup.md) · [Configuration](docs/configuration.md) · [Security design](docs/security.md) · [Private brain](docs/private-brain.md) · [Security](docs/modules/security.md) · [OSINT](docs/modules/osint.md) · [Workspace](docs/modules/workspace.md) · [Phone](docs/modules/phone.md) · [Design](docs/DESIGN.md)
+
+## Credits
+
+The 3D galaxy uses [three.js](https://threejs.org) and [3d-force-graph](https://github.com/vasturiano/3d-force-graph), both MIT-licensed, loaded from jsdelivr with pinned integrity hashes.
 
 ---
 
