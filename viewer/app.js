@@ -59,6 +59,75 @@
     }) : [mk('p', 'd', 'No sources came back.')]);
   }
 
+  // ---------- Module reports (kind "report"): verdict, findings, then each section's rows ----------
+  const GOOD = ['secure', 'no red flags', 'looks clean', 'not found', 'all known', 'first look', 'all quiet', 'all ordinary', 'armed', 'excellent', 'good'];
+  const BAD = ['at risk', 'likely phishing', 'dangerous', 'breached', 'triggered'];
+  function reportDrawer(d) {
+    const nodes = [mk('span', 'badge plain', d.badge || ''),
+                   mk('span', 'badge ' + (GOOD.includes(d.verdict) ? 'clean' : BAD.includes(d.verdict) ? 'bad' : 'mixed'), String(d.verdict || '').toUpperCase())];
+    if (d.findings && d.findings.length) {
+      nodes.push(mk('div', 'h3', 'Worth a look'));
+      d.findings.forEach(f => { const x = mk('div', 'find'); x.append(mk('b', f.level, f.level), document.createTextNode(f.text)); nodes.push(x); });
+    }
+    (d.sections || []).forEach(s => {
+      nodes.push(mk('div', 'h3', s.title));
+      s.rows.forEach(r => { const x = mk('div', 'rrow' + (r.risk ? ' ' + r.risk : '')); x.append(mk('span', 'k', r.k), mk('span', 'v', r.v)); nodes.push(x); });
+      if (s.note) nodes.push(mk('div', 'note', s.note));
+    });
+    drawer(`${d.title} · ${d.target}`, nodes);
+  }
+  // The breach box: the password is hashed here; only 5 characters of its SHA-1 go to the server (and on to Have I Been Pwned).
+  async function sha1(text) {
+    const b = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(text));
+    return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase();
+  }
+  function breachBox() {
+    const form = mk('form', 'box'), input = mk('input'), go = mk('button', '', 'CHECK'), out = mk('div', 'result');
+    Object.assign(input, { type: 'password', autocomplete: 'off', placeholder: 'password' });
+    input.setAttribute('aria-label', 'Password to check');
+    go.type = 'submit';
+    form.append(input, go);
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!input.value) return;
+      const hash = await sha1(input.value);
+      input.value = '';
+      out.className = 'result'; out.textContent = 'Checking…';
+      try {
+        const { range } = await api('/api/security/breach-range', { prefix: hash.slice(0, 5) });
+        const line = range.split(/\r?\n/).find(l => l.slice(0, 35).toUpperCase() === hash.slice(5));
+        const n = line ? parseInt(line.split(':')[1], 10) : 0;
+        out.className = 'result ' + (n ? 'bad' : 'good');
+        out.textContent = n ? `Leaked: seen ${n.toLocaleString()} times in breaches. Stop using it, everywhere.` : 'Not in any known breach. Still: one password per site.';
+        speak(n ? 'That password has leaked. Change it wherever you use it.' : 'Not found in any known breach.');
+      } catch (err) { out.className = 'result bad'; out.textContent = err.message; }
+    });
+    drawer('Breach check', [mk('p', 'note', 'It never leaves this tab: only the first 5 characters of its SHA-1 fingerprint go out.'), form, out]);
+    setTimeout(() => input.focus(), 50);
+  }
+
+  // ---------- The security gauge (only when the security module is on) ----------
+  async function loadSecurity() {
+    try {
+      const s = await api('/api/security');
+      $('sec-panel').hidden = false;
+      if (s.score == null) return;
+      const color = { excellent: 'var(--ok)', good: 'var(--cyan)', fair: '#ffe08a', 'at risk': 'var(--orange)' }[s.grade] || 'var(--cyan)';
+      $('sec-panel').style.setProperty('--sec', color);
+      $('sec-num').textContent = s.score;
+      $('sec-arc').style.strokeDashoffset = String(169.65 * (1 - s.score / 100));
+      $('sec-grade').textContent = s.grade;
+      $('sec-change').className = s.change > 0 ? 'up' : s.change < 0 ? 'down' : '';
+      $('sec-change').textContent = s.change ? `${s.change > 0 ? '▲' : '▼'} ${Math.abs(s.change)} since yesterday${s.change_why ? ' · ' + s.change_why : ''}` : 'steady';
+      const h = s.history || [], lo = Math.min(...h) - 4, hi = Math.max(...h) + 2;
+      document.querySelector('#sec-spark polyline').setAttribute('points', h.length > 1
+        ? h.map((v, i) => `${(i / (h.length - 1) * 100).toFixed(1)},${(22 - (v - lo) / (hi - lo || 1) * 20 - 1).toFixed(1)}`).join(' ') : '');
+      $('sec-top').textContent = (s.top && s.top[0]) || 'Nothing needs fixing.';
+      $('sec-when').textContent = s.at || '';
+    } catch (e) { $('sec-panel').hidden = true; }      // module off (404) or offline
+  }
+  $('sec-body').addEventListener('click', () => ask('What’s my security score?'));
+
   // ---------- The galaxy ----------
   let graph = null, data = { nodes: [], links: [] }, version = null;
   const COLORS = ['#5ee7ff', '#ffb36b', '#3dffa8', '#c49bff', '#ff8fb1', '#ffe08a', '#7fb3ff'];
@@ -197,6 +266,8 @@
       speak(d.answer);
       if (d.kind === 'answer') light(d.nodes);
       if (d.kind === 'research') sourcesDrawer(d);
+      if (d.kind === 'report') { reportDrawer(d); if (d.tool === 'score') loadSecurity(); }
+      if (d.kind === 'panel' && d.panel === 'breach') breachBox();
       if (d.kind === 'capture') setTimeout(loadGraph, 400);
       if (d.kind === 'mode') loadMode();
       loadActivity();
@@ -233,8 +304,11 @@
       if (!due.length) return;
       const { delivered } = await api('/reminders/ack', { ids: due.map(r => r.id) });
       if (!delivered.length) return;
-      const line = (delivered.length === 1 ? 'A reminder: ' : `${delivered.length} reminders: `) + delivered.map(r => r.text).join('; ') + '.';
-      show('Reminder', line);
+      const alerts = delivered.every(r => r.kind === 'alert');
+      const line = (delivered.length === 1 ? (alerts ? 'A security alert: ' : 'A reminder: ') : `${delivered.length} ${alerts ? 'security alerts' : 'reminders'}: `)
+        + delivered.map(r => r.text.replace(/\.$/, '')).join('; ') + '.';
+      show(alerts ? 'Security alert' : 'Reminder', line);
+      loadActivity();
       speak(line);
     } catch (e) {}
   }
@@ -259,5 +333,7 @@
   setInterval(loadGraph, 20 * 1000);
   setInterval(loadMode, 60 * 1000);
   setInterval(checkReminders, 15 * 1000);
+  loadSecurity();
+  setInterval(loadSecurity, 5 * 60 * 1000);
   $('q').focus();
 })();

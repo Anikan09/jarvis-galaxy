@@ -67,8 +67,9 @@ def _path():
     return config.data_path("reminders.json")
 
 
-def add(what, when):
-    item = {"id": secrets.token_hex(4), "text": what, "due": when.timestamp(), "done": False}
+def add(what, when, kind="reminder"):
+    """kind: "reminder", or "alert" for a module's security alert (delivered the same way, worded as an alert)."""
+    item = {"id": secrets.token_hex(4), "text": what, "due": when.timestamp(), "done": False, "kind": kind}
     with _lock:
         items = vault.read_json(_path(), []) or []
         vault.write_json(_path(), items + [item])

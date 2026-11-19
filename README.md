@@ -4,7 +4,7 @@
 
 A voice-driven personal AI butler for Windows, with a 3D galaxy of your notes as its brain and security designed in from the first line.
 
-> Work in progress: the core is here; the optional modules are next. The plan lives in [docs/DESIGN.md](docs/DESIGN.md).
+> Work in progress: the core and the security module are here; more modules are next. The plan lives in [docs/DESIGN.md](docs/DESIGN.md).
 
 ## What it does
 
@@ -16,6 +16,12 @@ A voice-driven personal AI butler for Windows, with a 3D galaxy of your notes as
 - **Expert and lab mode** for technical answers and CTF-style walkthroughs on machines you're allowed to test.
 - **Private mode**: answers from a local model on your PC; nothing leaves it.
 - **Demo mode** on a made-up company, to look around before connecting anything.
+
+## Optional modules
+
+Off until you switch them on in `config.json`.
+
+- **[Security](docs/modules/security.md)**: a security score gauge in the HUD; checks of your PC, Wi-Fi, connections, network devices and open ports; phishing-link, leaked-password and file checks; alerts from Windows' own logs; and tripwire decoy files that tell you when someone snoops.
 
 ## Locked down
 
@@ -41,7 +47,7 @@ No third-party Python packages: the core is standard library only.
 
 ## Docs
 
-[Setup](docs/setup.md) · [Configuration](docs/configuration.md) · [Security](docs/security.md) · [Private brain](docs/private-brain.md) · [Design](docs/DESIGN.md)
+[Setup](docs/setup.md) · [Configuration](docs/configuration.md) · [Security design](docs/security.md) · [Private brain](docs/private-brain.md) · [Security module](docs/modules/security.md) · [Design](docs/DESIGN.md)
 
 ---
 

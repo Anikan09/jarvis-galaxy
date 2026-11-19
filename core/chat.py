@@ -12,6 +12,7 @@ import threading
 import time
 
 from . import activity, brain, modes, notes, reminders, research
+import modules
 
 REMEMBER_RE = re.compile(r"^\s*(?:(?:please|jarvis)[\s,]+)?remember\s+that\b[\s,:;.-]*", re.I)
 SOURCES_RE = re.compile(r"\s*\**SOURCES\**\s*:\s*\**([^\n]*)\s*$", re.I)
@@ -94,6 +95,15 @@ def handle(text, session_id):
         reminders.add(what, when)
         activity.log("Reminder set", what)
         return {"kind": "reminder", "answer": f"I'll remind you {reminders.when_text(when.timestamp())} to {what}."}
+
+    claimed = modules.route(text)                  # an enabled module (security...) takes it
+    if claimed:
+        handler, arg = claimed
+        result = handler(arg, text)
+        if not result.get("private"):              # a password typed into the box is never logged or remembered
+            activity.log(result.pop("activity", "Module"), result.get("target", ""))
+            _remember_turn(session, text, result.get("answer", ""))
+        return result
 
     t = research.topic(text)
     if t:

@@ -26,6 +26,7 @@ if "--demo" in sys.argv[1:]:
     os.environ["JARVIS_DEMO"] = "1"           # before anything reads a path
 
 from . import activity, auth, brain, chat, config, modes, notes, reminders  # noqa: E402
+import modules  # noqa: E402
 
 GATE = auth.Gate()
 LAST_TAB = {"at": 0.0}
@@ -130,7 +131,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                                             "language": config.get("language"), "locked": not unlocked_demo()})
             if path == "/api/reminders/due":
                 LAST_TAB["at"] = time.time()
-                return self.send_json(200, {"due": [{"id": r["id"], "text": r["text"]} for r in reminders.due()]})
+                return self.send_json(200, {"due": [{"id": r["id"], "text": r["text"], "kind": r.get("kind", "reminder")} for r in reminders.due()]})
+            if path == "/api/modules":
+                return self.send_json(200, {"enabled": [m.NAME for m in modules.enabled()]})
+            fn = modules.get_route(path)
+            if fn:
+                return self.send_json(200, fn())
         except (ConnectionError, BrokenPipeError):
             return
         if page:
@@ -148,7 +154,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     # ---------- POST ----------
     def do_POST(self):
         route = self.path.split("?", 1)[0]
-        if route not in ("/auth/login", "/auth/logout", "/chat", "/reminders/ack"):
+        if route not in ("/auth/login", "/auth/logout", "/chat", "/reminders/ack") and not modules.post_route(route):
             return self.send_error(404)
         if self.headers.get("Host", "") not in own_hosts():
             return self.send_json(403, {"error": "Forbidden host."})
@@ -188,11 +194,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         try:
             if route == "/reminders/ack":
                 ids = {i for i in payload.get("ids") or [] if isinstance(i, str)}
-                return self.send_json(200, {"delivered": [{"id": r["id"], "text": r["text"]} for r in reminders.ack(ids)]})
+                return self.send_json(200, {"delivered": [{"id": r["id"], "text": r["text"], "kind": r.get("kind", "reminder")}
+                                                          for r in reminders.ack(ids)]})
+            fn = modules.post_route(route)
+            if fn:
+                return self.send_json(200, fn(payload))
             session = re.sub(r"[^A-Za-z0-9-]", "", str(payload.get("session", "")))[:64] or "default"
             return self.send_json(200, chat.handle(str(payload.get("text", ""))[:2000], session))
         except brain.BrainError as e:
             return self.send_json(e.status, {"error": str(e)})
+        except modules.ModuleError as e:
+            return self.send_json(422, {"error": str(e)})
         except (ConnectionError, BrokenPipeError):
             return
         except Exception as e:                        # keep the server alive, say nothing internal
@@ -208,7 +220,8 @@ def _reminder_loop():
             if time.time() - LAST_TAB["at"] < TAB_GRACE:
                 continue
             for r in reminders.ack({x["id"] for x in reminders.due()}):
-                reminders.toast(str(config.get("assistant_name") or "Jarvis"), r["text"])
+                name = str(config.get("assistant_name") or "Jarvis")
+                reminders.toast(f"{name} security alert" if r.get("kind") == "alert" else name, r["text"])
         except Exception as e:
             print(f"Reminders: {type(e).__name__}")
 
@@ -216,6 +229,8 @@ def _reminder_loop():
 def main():
     notes.all_notes()
     threading.Thread(target=_reminder_loop, name="reminders", daemon=True).start()
+    import datetime
+    modules.start_all(lambda text, kind="alert": reminders.add(text, datetime.datetime.now(), kind))
     handler = functools.partial(Handler, directory=config.VIEWER_DIR)
     with http.server.ThreadingHTTPServer(("127.0.0.1", port()), handler) as httpd:
         print(f"{config.get('assistant_name')}: http://localhost:{port()}/")

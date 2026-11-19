@@ -19,7 +19,8 @@ encrypted (`python -m core.vault set <name>`).
 | `private_brain.url` | `http://127.0.0.1:11434` | Ollama's address. Anything not on this PC is refused. |
 | `private_brain.model` | `qwen2.5:7b` | The local model for private mode. |
 | `private_brain.fallback` | `true` | When Claude can't be reached, simple questions go to the local model (and say so). |
-| `modules.*` | `false` | Optional modules, off until you switch them on (coming in later versions). |
+| `modules.security` | `false` | The [security module](modules/security.md): checks, alerts, tripwires and the score gauge. |
+| `modules.*` (others) | `false` | Further modules, coming in later versions. |
 
 ## Where things are kept
 

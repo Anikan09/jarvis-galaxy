@@ -25,6 +25,15 @@
     <div id="clock">--:--</div>
     <div id="date">&nbsp;</div>
   </section>
+  <section class="panel" id="sec-panel" hidden>
+    <h2>Security <span id="sec-when"></span></h2>
+    <button type="button" id="sec-body" title="Ask about the security score">
+      <span class="dial" aria-hidden="true"><svg viewBox="0 0 64 64"><circle class="track" cx="32" cy="32" r="27"/><circle class="arc" id="sec-arc" cx="32" cy="32" r="27"/></svg><span id="sec-num">--</span></span>
+      <span class="meta"><span id="sec-grade">First check soon…</span><span id="sec-change"></span>
+        <svg id="sec-spark" viewBox="0 0 100 22" preserveAspectRatio="none" aria-hidden="true"><polyline points=""/></svg></span>
+    </button>
+    <div id="sec-top"></div>
+  </section>
   <section class="panel grow">
     <h2>Activity</h2>
     <ol id="activity"><li class="empty">Quiet so far.</li></ol>
