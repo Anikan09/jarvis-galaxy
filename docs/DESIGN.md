@@ -171,7 +171,7 @@ Run on 2026-11-19 against a fresh clone and the full git history.
 - [x] Every file written for this repo; nothing copied over from a personal install
 - [x] No personal data anywhere, in any commit (names, e-mail addresses, user names in paths, Wi-Fi and device names): scanned
 - [x] No secret-looking strings in the history (API keys, tokens, private keys, app passwords): scanned with patterns
-- [ ] **A dedicated secret scanner before publishing**: `gitleaks detect --source . --log-opts=--all` (install from github.com/gitleaks/gitleaks)
+- [x] A dedicated secret scanner over the whole history: gitleaks, no leaks found
 - [x] Commits use the GitHub no-reply address only
 - [x] No config, key, database or data/ file was ever committed
 - [x] `config.example.json` holds placeholders only; every module off by default
