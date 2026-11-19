@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jarvis Galaxy</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="galaxy" aria-label="Knowledge galaxy: drag to orbit, scroll to zoom, click a note"></div>
+
+<header id="top">
+  <div class="brand"><span class="orb" aria-hidden="true"></span><h1 id="name">JARVIS</h1></div>
+  <div class="chips">
+    <span class="chip demo" id="chip-demo" hidden title="Demo mode: everything shown is made-up sample data">DEMO DATA</span>
+    <span class="chip expert" id="chip-expert" hidden>EXPERT</span>
+    <span class="chip lab" id="chip-lab" hidden>LAB</span>
+    <span class="chip private" id="chip-private" hidden title="Private mode: answers come from the model on this PC">PRIVATE</span>
+    <button type="button" id="lock" title="Lock now (or say “lock Jarvis”)">LOCK</button>
+  </div>
+</header>
+
+<aside id="left">
+  <section class="panel">
+    <div id="clock">--:--</div>
+    <div id="date">&nbsp;</div>
+  </section>
+  <section class="panel grow">
+    <h2>Activity</h2>
+    <ol id="activity"><li class="empty">Quiet so far.</li></ol>
+  </section>
+</aside>
+
+<aside id="drawer" aria-hidden="true">
+  <header><h2 id="drawer-title">Sources</h2><button type="button" id="drawer-close" aria-label="Close">×</button></header>
+  <div id="drawer-body"></div>
+</aside>
+
+<section id="console" aria-label="Ask">
+  <div id="answer" role="status" aria-live="polite"></div>
+  <form id="ask" autocomplete="off">
+    <label for="q" class="sr-only">Ask, or say “remember that …”</label>
+    <input id="q" maxlength="2000" placeholder="Ask your notes, “remember that …”, “research …”, “remind me in 10 minutes to …”">
+    <button type="button" id="mic" title="Speak (Chrome sends the audio to Google's speech service while listening)" aria-label="Speak">MIC</button>
+    <button type="submit" id="send" aria-label="Send">ASK</button>
+  </form>
+</section>
+
+<div id="error" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"
+        integrity="sha384-RRHfJ6w1mTlKUBMYT/hvnRiOzEB/vyRV3DrQOseb6oYfvaZSfdd0byS4bHps0k2R" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/3d-force-graph@1.73.4/dist/3d-force-graph.min.js"
+        integrity="sha384-GNPicn8pBA2/PGSyPTpxIlPurgLUYcNYJ2zskIq782dE9+gp5E32WSyuxZqA7J+u" crossorigin="anonymous"></script>
+<script src="app.js"></script>
+</body>
+</html>

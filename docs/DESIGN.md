@@ -34,7 +34,7 @@ Status: design, before any code. This repo stays **private** until the release c
 ## 3. Architecture
 
 ```
- Browser (viewer/)                    Local server (127.0.0.1:4700)                 Outside world
+ Browser (viewer/)                    Local server (127.0.0.1:4747)                 Outside world
  ┌─────────────────────┐   HTTP      ┌──────────────────────────────┐
  │ HUD + 3D galaxy     │ ──────────► │ core/server: routes, lock,   │ ──► Claude Code CLI (the brain)
  │ voice in/out        │  (session   │ sessions, Do-It gate         │ ──► Ollama on 127.0.0.1 (private mode)
@@ -112,7 +112,7 @@ jarvis-galaxy/
 
 1. Install Python 3.12+ and the Claude Code CLI; log in to Claude Code once.
 2. `git clone`, then `python setup.py`: checks the requirements, creates `config.json` from the example, runs the lock setup (password + authenticator), and asks which modules to enable.
-3. `python -m core.server` (or `--demo` to look around first) and open `http://localhost:4700`.
+3. `python -m core.server` (or `--demo` to look around first) and open `http://localhost:4747`.
 4. Optional per module: `python -m modules.workspace.login`, `ollama pull ...`, and so on, each documented on its module page.
 
 ---

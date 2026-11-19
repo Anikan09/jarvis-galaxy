@@ -1,0 +1,24 @@
+{
+  "assistant_name": "Jarvis",
+  "address_user_as": "sir",
+  "language": "English",
+  "model": "",
+  "notes_folder": "notes",
+  "port": 4747,
+  "idle_minutes": 30,
+  "expert_hours": 2,
+  "lab_targets": [],
+  "voice": "",
+  "private_brain": {
+    "url": "http://127.0.0.1:11434",
+    "model": "qwen2.5:7b",
+    "fallback": true
+  },
+  "modules": {
+    "workspace": false,
+    "security": false,
+    "osint": false,
+    "private_brain": false,
+    "phone": false
+  }
+}
