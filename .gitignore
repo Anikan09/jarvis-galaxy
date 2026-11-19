@@ -1,0 +1,52 @@
+# ---- Never commit: secrets and keys (encrypted or not) ----
+config.json
+secrets.json
+auth.json
+auth.json.tmp
+token.json
+credentials.json
+*.pem
+*.key
+.env
+.env.*
+
+# ---- Never commit: personal data a running Jarvis creates ----
+# (top-level folders only: demo/notes, the made-up sample notes, does ship)
+/notes/
+/vault/
+timemachine.db*
+actions.log
+reminders.json
+events.json
+lang.json
+known_devices.json
+sentinel.json
+posture.json
+notices.json
+tripwires.json
+screen-guide/*.png
+demo-outbox.jsonl
+/backups/
+# demo mode's runtime files (its notes ship, its activity doesn't)
+demo/actions.log
+demo/reminders.json
+demo/notices.json
+
+# ---- Generated ----
+viewer/graph-data.js
+viewer/graph-data.js.tmp
+*.tmp
+*.part
+
+# ---- Python, editors, OS ----
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.vscode/
+.idea/
+.claude/
+Thumbs.db
+desktop.ini
+.DS_Store
