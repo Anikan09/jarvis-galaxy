@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability (privately)
+    url: https://github.com/Anikan09/jarvis-galaxy/security/advisories/new
+    about: Please don't open a public issue for a security problem. Use this private form instead.
+  - name: Setup help and documentation
+    url: https://github.com/Anikan09/jarvis-galaxy/blob/main/docs/setup.md
+    about: Installation, the lock, troubleshooting, and every module's page.

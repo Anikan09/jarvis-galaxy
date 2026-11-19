@@ -1,0 +1,81 @@
+name: Bug report
+description: Something doesn't work as it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Protect your privacy first.** Never paste your `config.json`, anything from `data/`, tokens, passwords, API keys,
+        your notes, e-mails, or logs that show personal details. If you can, reproduce the problem in demo mode
+        (`python -m core.server --demo`), which uses made-up data only.
+
+        **Found a security problem?** Don't post it here: use [Report a vulnerability](https://github.com/Anikan09/jarvis-galaxy/security/advisories/new) instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Start with python -m core.server --demo
+        2. Ask "…"
+        3. …
+    validations:
+      required: true
+  - type: dropdown
+    id: demo
+    attributes:
+      label: Does it happen in demo mode too?
+      options:
+        - "Yes"
+        - "No, only with my own data"
+        - "I haven't tried"
+    validations:
+      required: true
+  - type: checkboxes
+    id: modules
+    attributes:
+      label: Which modules are switched on?
+      options:
+        - label: security
+        - label: osint
+        - label: workspace
+        - label: phone
+        - label: none (core only)
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: Windows 11 24H2
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: 3.12.4
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      placeholder: Chrome 131
+  - type: textarea
+    id: errors
+    attributes:
+      label: Error messages
+      description: The message shown in the HUD or the server window. Remove anything personal before pasting.
+      render: text
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I've removed passwords, tokens, keys, e-mail addresses, notes and other personal details from this report.
+          required: true

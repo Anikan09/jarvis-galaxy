@@ -1,0 +1,49 @@
+name: Feature request
+description: An idea for Jarvis Galaxy.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. One thing up front: Jarvis is built so its limits hold, so requests that weaken them won't be
+        accepted. That means features that act on systems or people that aren't yours, scan or attack other networks,
+        profile private individuals, or send, pay or delete without a confirmation. Ideas that make Jarvis more useful
+        **within** those limits are very welcome.
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why? What would it help you do?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where does it belong?
+      options:
+        - Core (galaxy, chat, voice, notes, modes)
+        - Security module
+        - OSINT module
+        - Workspace module (mail, calendar, briefing)
+        - Phone module
+        - A new module
+        - Docs
+    validations:
+      required: true
+  - type: textarea
+    id: privacy
+    attributes:
+      label: Does it need to send anything off the PC?
+      description: If so, what, and to whom? Every module documents this, so it helps to think it through early.
+  - type: checkboxes
+    id: limits
+    attributes:
+      label: Limits
+      options:
+        - label: This stays within what's the user's own (their PC, network, accounts, or lab targets they're allowed to test).
+          required: true
