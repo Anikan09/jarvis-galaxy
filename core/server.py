@@ -230,7 +230,10 @@ def main():
     notes.all_notes()
     threading.Thread(target=_reminder_loop, name="reminders", daemon=True).start()
     import datetime
-    modules.start_all(lambda text, kind="alert": reminders.add(text, datetime.datetime.now(), kind))
+    def deliver(text, kind="alert"):
+        reminders.add(text, datetime.datetime.now(), kind)       # spoken in an open tab, or a Windows notification
+        modules.notify(kind)                                     # and, with the phone module, a content-free push
+    modules.start_all(deliver)
     handler = functools.partial(Handler, directory=config.VIEWER_DIR)
     with http.server.ThreadingHTTPServer(("127.0.0.1", port()), handler) as httpd:
         print(f"{config.get('assistant_name')}: http://localhost:{port()}/")

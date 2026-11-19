@@ -14,7 +14,7 @@ import importlib
 
 from core import config
 
-KNOWN = ("security",)
+KNOWN = ("security", "osint", "workspace", "phone")
 
 
 class ModuleError(Exception):
@@ -63,6 +63,16 @@ def post_route(path):
         if fn:
             return fn
     return None
+
+
+def notify(kind):
+    """Tell modules that listen (phone) that an alert or notice went out. Only the kind, never the text."""
+    for mod in enabled():
+        if hasattr(mod, "notify"):
+            try:
+                mod.notify(kind)
+            except Exception as e:
+                print(f"Module {getattr(mod, 'NAME', '?')} notify failed: {type(e).__name__}")
 
 
 def start_all(deliver):

@@ -20,7 +20,11 @@ encrypted (`python -m core.vault set <name>`).
 | `private_brain.model` | `qwen2.5:7b` | The local model for private mode. |
 | `private_brain.fallback` | `true` | When Claude can't be reached, simple questions go to the local model (and say so). |
 | `modules.security` | `false` | The [security module](modules/security.md): checks, alerts, tripwires and the score gauge. |
-| `modules.*` (others) | `false` | Further modules, coming in later versions. |
+| `modules.osint` | `false` | The [OSINT module](modules/osint.md). |
+| `modules.workspace` | `false` | The [workspace module](modules/workspace.md): Gmail, calendars, briefing. |
+| `modules.phone` | `false` | The [phone module](modules/phone.md): content-free alert pushes. |
+| `workspace.apple_id`, `workspace.apple_calendar` | — | Apple Calendar sign-in name and calendar (empty = all). The password goes in the vault. |
+| `phone.ntfy_server` | `https://ntfy.sh` | Where pushes go (https only). |
 
 ## Where things are kept
 

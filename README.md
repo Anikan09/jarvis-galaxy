@@ -4,7 +4,7 @@
 
 A voice-driven personal AI butler for Windows, with a 3D galaxy of your notes as its brain and security designed in from the first line.
 
-> Work in progress: the core and the security module are here; more modules are next. The plan lives in [docs/DESIGN.md](docs/DESIGN.md).
+> Version 1 is feature-complete and being polished before release. The plan lives in [docs/DESIGN.md](docs/DESIGN.md).
 
 ## What it does
 
@@ -22,6 +22,11 @@ A voice-driven personal AI butler for Windows, with a 3D galaxy of your notes as
 Off until you switch them on in `config.json`.
 
 - **[Security](docs/modules/security.md)**: a security score gauge in the HUD; checks of your PC, Wi-Fi, connections, network devices and open ports; phishing-link, leaked-password and file checks; alerts from Windows' own logs; and tripwire decoy files that tell you when someone snoops.
+- **[OSINT](docs/modules/osint.md)**: passive domain and IP recon (registration, DNS, certificates, who runs it, public threat reports), and a metadata check before you share a photo or PDF.
+- **[Workspace](docs/modules/workspace.md)**: Gmail triage, today's Google and Apple calendars, and a spoken morning briefing. Read-only; message bodies are never read.
+- **[Phone](docs/modules/phone.md)**: security alerts pushed to your phone with no details in them; Jarvis itself stays unreachable.
+
+Optional packages for those modules: `pip install -r requirements-optional.txt` (only what you need).
 
 ## Locked down
 
@@ -47,7 +52,7 @@ No third-party Python packages: the core is standard library only.
 
 ## Docs
 
-[Setup](docs/setup.md) · [Configuration](docs/configuration.md) · [Security design](docs/security.md) · [Private brain](docs/private-brain.md) · [Security module](docs/modules/security.md) · [Design](docs/DESIGN.md)
+[Setup](docs/setup.md) · [Configuration](docs/configuration.md) · [Security design](docs/security.md) · [Private brain](docs/private-brain.md) · [Security](docs/modules/security.md) · [OSINT](docs/modules/osint.md) · [Workspace](docs/modules/workspace.md) · [Phone](docs/modules/phone.md) · [Design](docs/DESIGN.md)
 
 ---
 

@@ -60,7 +60,8 @@
   }
 
   // ---------- Module reports (kind "report"): verdict, findings, then each section's rows ----------
-  const GOOD = ['secure', 'no red flags', 'looks clean', 'not found', 'all known', 'first look', 'all quiet', 'all ordinary', 'armed', 'excellent', 'good'];
+  const GOOD = ['secure', 'no red flags', 'looks clean', 'not found', 'all known', 'first look', 'all quiet', 'all ordinary', 'armed', 'excellent', 'good',
+                'no issues', 'safe to share', 'looked up', 'local', 'ready'];
   const BAD = ['at risk', 'likely phishing', 'dangerous', 'breached', 'triggered'];
   function reportDrawer(d) {
     const nodes = [mk('span', 'badge plain', d.badge || ''),
