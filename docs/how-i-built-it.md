@@ -45,7 +45,7 @@ Before publishing I went through a checklist: a secret scanner over the whole gi
 
 ## What went wrong (the useful part)
 
-- **The setup test found two real bugs in ten minutes.** My authenticator app refused the setup key with "illegal character", because I showed it in groups of four with spaces. And the voice spoke English with a German accent: my Windows is set to German, and the browser picked a German voice before its English ones had loaded. **Lesson: install your own project from scratch, like a stranger would, before anyone else does.**
+- **The setup test found two real bugs in ten minutes.** My authenticator app refused the setup key with "illegal character", because I showed it in groups of four with spaces. And the voice was wrong: the browser picked a voice before its full list had loaded, and it followed the browser's language instead of Jarvis's. **Lesson: install your own project from scratch, like a stranger would, before anyone else does.**
 - **"Female" contains "male".** The code meant to pick a male voice happily picked a female one. Tiny bug, very funny once you see it.
 - **A test that couldn't fail.** One of my privacy tests is supposed to catch personal email addresses in the repo. An edit made through the shell had turned a `\b` in its pattern into an invisible backspace character, so the test could never match anything, and it passed for days without really checking. **Lesson: test your tests.** Now the test proves its own pattern works before it scans, and another test fails if any file contains an invisible control character.
 - **Demo mode wrote into the real demo files.** Saying "remember that…" in the demo created a note inside the repo's own demo folder. Now the demo works on a copy.
