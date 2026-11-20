@@ -154,7 +154,7 @@ The docs page lists every risk (exposure beyond localhost, the Tailscale account
 
 - **README**: the headline, a demo GIF recorded in demo mode, the feature list, quick start, the security promise, the Claude-account note, the Marvel disclaimer.
 - **docs/**: setup, FAQ, configuration, security, private brain, one page per module (the phone page lists the risks of each level).
-- Later: "How I built my own Jarvis", the build story and what I learned.
+- `docs/how-i-built-it.md`: "How I built my own Jarvis", the build story and what I learned.
 
 ---
 
