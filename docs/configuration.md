@@ -8,14 +8,15 @@ encrypted (`python -m core.vault set <name>`).
 |---|---|---|
 | `assistant_name` | `"Jarvis"` | The name in the HUD, the login page and the persona. |
 | `address_user_as` | `"sir"` | How the butler addresses you (at most once per reply). |
-| `language` | `"English"` | The language replies are written in. |
+| `language` | `"English"` | The language replies are written in. It also sets the voice and the microphone: "English" means British English (en-GB), "German" de-DE, and so on, whatever language your browser or Windows region uses. |
+| `voice_locale` | `""` | Overrides that voice and microphone language, e.g. `"en-US"`. |
 | `model` | `""` | A Claude model for the CLI (`--model`); empty uses Claude Code's default. |
 | `notes_folder` | `"notes"` | The notes folder, relative to the project or absolute. Works as an Obsidian vault. |
 | `port` | `4747` | The local port. The server only ever listens on 127.0.0.1. |
 | `idle_minutes` | `30` | A session ends after this long without a request from you. Sessions also end after 12 hours. |
 | `expert_hours` | `2` | Expert/lab mode switches itself off after this long. |
 | `lab_targets` | `[]` | Machines you're allowed to test, for lab mode: ranges like `"10.10.0.0/16"` or names like `"box.htb"`. Ranges wider than a private /8 or a public /16 are ignored. |
-| `voice` | `""` | The start of a browser voice name for spoken replies, e.g. `"Microsoft Ryan"`; empty picks a British voice. |
+| `voice` | `""` | The start of a browser voice name for spoken replies, e.g. `"Google UK English Male"` (Chrome) or `"Microsoft Ryan"` (Edge); empty picks a male voice in the language above, then any voice in it. |
 | `private_brain.url` | `http://127.0.0.1:11434` | Ollama's address. Anything not on this PC is refused. |
 | `private_brain.model` | `qwen2.5:7b` | The local model for private mode. |
 | `private_brain.fallback` | `true` | When Claude can't be reached, simple questions go to the local model (and say so). |
