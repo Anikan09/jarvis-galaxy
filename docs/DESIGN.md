@@ -3,7 +3,7 @@
 > **I built my own Jarvis — and locked it down like a vault.**
 > A voice-driven personal AI butler for Windows, with a 3D galaxy of your notes as its brain and security designed in from the first line.
 
-Status: version 1 built (core + security, osint, workspace and phone level 1). The repo stays **private** until the release checklist at the bottom is done.
+Status: version 1 (core + the security, osint, workspace and phone modules). This file started as the plan; it now describes what was built, with the not-yet-built parts marked as such.
 
 ---
 
@@ -24,7 +24,7 @@ Status: version 1 built (core + security, osint, workspace and phone level 1). T
 1. **Security first, visibly.** Locked by default (password + authenticator code). Secrets encrypted at rest. Nothing listens beyond `127.0.0.1` unless the user deliberately turns a module on.
 2. **Off by default.** The core works on its own; every module is opt-in in `config.json`, with what it reads, sends and stores written next to its switch.
 3. **Say what leaves the PC.** Every feature documents exactly what goes to which outside service. Private mode keeps everything on the machine.
-4. **Hard limits in code, not just in prompts.** Only the user's own devices, sites and lab targets; nothing that pays, deletes, enters passwords or sends unseen; anything leaving the PC waits for an explicit button press.
+4. **Hard limits in code, not just in prompts.** Only the user's own devices, sites and lab targets. Version 1 never pays, deletes, enters passwords or sends anything on the user's behalf: the workspace module is read-only.
 5. **Demo mode is first-class.** `--demo` runs everything on a fictional company's data, so screenshots and first impressions need no real accounts.
 6. **Honest about limits.** Each tool's docs say what it can't catch.
 7. **Windows only, for v1.** Said plainly in the README. Other platforms are a later question.
@@ -37,8 +37,8 @@ Status: version 1 built (core + security, osint, workspace and phone level 1). T
  Browser (viewer/)                    Local server (127.0.0.1:4747)                 Outside world
  ┌─────────────────────┐   HTTP      ┌──────────────────────────────┐
  │ HUD + 3D galaxy     │ ──────────► │ core/server: routes, lock,   │ ──► Claude Code CLI (the brain)
- │ voice in/out        │  (session   │ sessions, Do-It gate         │ ──► Ollama on 127.0.0.1 (private mode)
- │ drawers, Do-It gate │   cookie)   │ core/: notes, vault, auth... │
+ │ voice in/out        │  (session   │ sessions                     │ ──► Ollama on 127.0.0.1 (private mode)
+ │ drawers             │   cookie)   │ core/: notes, vault, auth... │
  └─────────────────────┘             │ modules/: opt-in features ───┼──► only what each module documents
                                      └──────────────────────────────┘     (Google, OSINT registries, HIBP prefix...)
 ```
@@ -54,22 +54,23 @@ Status: version 1 built (core + security, osint, workspace and phone level 1). T
 ```
 jarvis-galaxy/
 ├── core/                 the part everyone runs
-│   ├── server.py         HTTP routes, the gate, the brain gateway
+│   ├── server.py         HTTP routes and the lock check
+│   ├── brain.py          the brain gateway (Claude Code CLI)
+│   ├── localbrain.py     the private brain (Ollama on this PC)
 │   ├── auth.py           password + TOTP lock, sessions, recovery codes
 │   ├── vault.py          DPAPI encryption for secrets and state
 │   ├── notes.py          the notes index and galaxy builder
 │   ├── modes.py          demo, expert/lab and private mode
 │   └── ...
-├── modules/              opt-in features, one folder each, each with its own README
+├── modules/              opt-in features, one folder each, each with its own page in docs/modules/
 │   ├── workspace/        Google Gmail + Calendar, Apple Calendar
 │   ├── security/         score, alerts, tripwires, network, Wi-Fi, ports, phishing, breach, file check
 │   ├── osint/            domain/IP recon, metadata check
-│   ├── private_brain/    Ollama
-│   └── phone/            phone access (levels 1-2, see section 8)
+│   └── phone/            phone alerts (level 1, see section 8)
 ├── viewer/               the HUD (HTML/JS), no build step
 ├── demo/                 the fictional company: notes and fixtures
-├── docs/                 setup, architecture, security, one page per module, this file
-├── tests/                the self-checks (what "preflight" does today, as tests)
+├── docs/                 setup, FAQ, configuration, security, private brain, one page per module, this file
+├── tests/                the offline self-checks
 ├── setup.py              first-run wizard
 ├── config.example.json   every setting, with comments in docs/configuration.md
 └── LICENSE, README.md
@@ -83,7 +84,7 @@ jarvis-galaxy/
 | Feature | Notes |
 |---|---|
 | Knowledge galaxy | Notes folder (works as an Obsidian vault) shown as a 3D graph; answers cite the notes they used |
-| Chat and voice | Typed or spoken; wake word optional; replies spoken aloud; 16 languages |
+| Chat and voice | Typed, or spoken with the MIC button; replies spoken aloud; reply language, voice and microphone set by `language` |
 | "Remember that…" | Files a new note and links it into the galaxy |
 | Web research | Live web via the brain, sources in a side drawer |
 | Lock | Password + authenticator (TOTP), recovery codes, lockout, idle timeout, Lock button |
@@ -94,33 +95,35 @@ jarvis-galaxy/
 ### Modules (opt-in, off by default)
 | Module | Contents | Leaves the PC |
 |---|---|---|
-| workspace | Gmail triage, morning briefing, calendar, drafts behind Do It | Google / Apple APIs |
+| workspace | Gmail triage, morning briefing, calendar; read-only | Google / Apple APIs |
 | security | Security score + HUD gauge, alerts, tripwires, network devices, Wi-Fi, connections, open ports, PC check, phishing, breach, file check, website audit | Registry age lookups, HIBP hash prefix, optional malware-hash lookups |
 | osint | WHOIS/RDAP, DNS, TLS, IP intel, file metadata check | Public registries, DNS |
-| private_brain | Ollama for private mode and offline fallback | Nothing |
-| phone | See section 8 | Push service (level 1) / Tailscale (level 2) |
+| phone | Content-free alerts to your phone, see section 8 | The push service (ntfy) |
+
+The **private brain** (Ollama, for private mode and offline fallback) is part of the core, `core/localbrain.py`, switched on by having Ollama running: see `docs/private-brain.md`. Nothing leaves the PC.
 
 ### Not in v1
 - **Take over (driving the PC)**: too risky to hand to strangers in a first release.
 - **Teardown**: depends on an external reverse-engineering kit.
 - **Legal module**: legal-advice liability.
-- **Screen guide**, **Time Machine diary**: later, once the core is stable.
+- **Screen guide**, **Time Machine diary**, **wake word**, **encrypted backups**: later, once the core is stable.
+- **Phone level 2** (read-only dashboard over Tailscale): v1.x at the earliest, see section 8.
 
 ---
 
 ## 6. Setup flow
 
-1. Install Python 3.12+ and the Claude Code CLI; log in to Claude Code once.
-2. `git clone`, then `python setup.py`: checks the requirements, creates `config.json` from the example, runs the lock setup (password + authenticator), and asks which modules to enable.
+1. Install Python 3.11+ and the Claude Code CLI; log in to Claude Code once.
+2. `git clone`, then `python setup.py`: checks the requirements, creates `config.json` from the example and the notes folder, and runs the lock setup (password + authenticator, QR code with `pip install qrcode`). Modules are switched on afterwards in `config.json`.
 3. `python -m core.server` (or `--demo` to look around first) and open `http://localhost:4747`.
-4. Optional per module: `python -m modules.workspace.login`, `ollama pull ...`, and so on, each documented on its module page.
+4. Optional per module: `python -m modules.workspace.google client_secret.json`, `python -m modules.phone setup`, `ollama pull ...`, each documented on its page.
 
 ---
 
 ## 7. Security design (documented in docs/security.md)
 
 - **Lock**: scrypt-hashed password, TOTP (RFC 6238) with replay protection, 8 one-time recovery codes, 5-try lockout that doubles, 30-minute idle timeout, sessions in memory only, HttpOnly + SameSite=Strict cookie, Host and Origin checks against DNS rebinding.
-- **At rest**: secrets and state files encrypted with DPAPI; backups encrypted as a whole; recommended: the whole project on an encrypted drive (VeraCrypt or BitLocker).
+- **At rest**: secrets and state files encrypted with DPAPI; recommended: the whole project on an encrypted drive (VeraCrypt or BitLocker).
 - **Network**: binds to `127.0.0.1` only. Modules that reach out say where, and why.
 - **Private mode**: nothing goes to the brain; anything that would need the internet is declined, not quietly sent.
 - **Hard limits** (section 2.4) enforced in code, with tests.
@@ -134,7 +137,7 @@ jarvis-galaxy/
 |---|---|---|---|
 | 1. Alerts only | Security alerts and notices pushed to the phone; message text carries no details ("Jarvis: 1 security alert") | Low: the push service sees only that there was an alert | v1 |
 | 2. Read-only dashboard | Score, alerts, devices, calendar over Tailscale, passkey login, nothing can be changed from the phone | Medium: Jarvis becomes reachable from the tailnet; the Tailscale account becomes a key; the encrypted drive must stay mounted | v1.x |
-| 3. Full control | Chat, Do-It approvals, desktop control from the phone | High | Documented as not recommended; not built |
+| 3. Full control | Chat and desktop control from the phone | High | Documented as not recommended; not built |
 
 The docs page lists every risk (exposure beyond localhost, the Tailscale account, both login factors on one phone, the encrypted drive staying open, https certificates publishing the machine name) and how each level handles it.
 
@@ -142,15 +145,16 @@ The docs page lists every risk (exposure beyond localhost, the Tailscale account
 
 ## 9. Testing
 
-- `tests/` runs offline by default (no accounts needed), the way preflight does today: routing patterns shared between server and viewer, the lock, the vault, every module's self-test, demo mode leaving real data untouched.
-- Live tests run against a throwaway server with a throwaway lock, never the user's own.
+- `python -m unittest discover -s tests` runs offline (no accounts needed): routing, the lock, the vault, every module against fakes, demo mode leaving real data untouched, and a privacy scan of the repo itself.
+- Google, Apple and ntfy are tested against fakes; the live services aren't part of the suite.
 
 ---
 
 ## 10. Docs plan
 
 - **README**: the headline, a demo GIF recorded in demo mode, the feature list, quick start, the security promise, the Claude-account note, the Marvel disclaimer.
-- **docs/**: setup, configuration, architecture, security, one page per module, phone access and its risks, "How I built my own Jarvis" (the build story and what I learned).
+- **docs/**: setup, FAQ, configuration, security, private brain, one page per module (the phone page lists the risks of each level).
+- Later: "How I built my own Jarvis", the build story and what I learned.
 
 ---
 
@@ -158,7 +162,7 @@ The docs page lists every risk (exposure beyond localhost, the Tailscale account
 
 1. **Design** (this file) and the private repo.
 2. **Core**: server, lock, vault, notes galaxy, chat, voice, modes, setup wizard, tests.
-3. **Modules**: security, osint, private_brain, workspace, phone level 1.
+3. **Modules**: security, osint, workspace, phone level 1; the private brain in the core.
 4. **Docs and demo GIF.**
 5. **Release checklist**, then public.
 
@@ -178,8 +182,10 @@ Run on 2026-11-19 against a fresh clone and the full git history.
 - [x] Demo data is fictional (Ember & Oak, example.com addresses); screenshots and the GIF carry no metadata
 - [x] Third-party licences: three.js and 3d-force-graph, both MIT, credited in the README
 - [x] Each module page says what leaves the PC
-- [x] Tests pass on a fresh clone (55 offline tests); a fresh clone without a lock serves nothing but the set-up page
+- [x] Tests pass on a fresh clone (57 offline tests); a fresh clone without a lock serves nothing but the set-up page
+- [x] `python setup.py` tried on a fresh clone by a first-time user (2026-11-20): two problems found and fixed (the authenticator key, the voice language)
 - [x] README: headline, demo GIF, Claude-account note, Marvel disclaimer, MIT licence
 - [x] SECURITY.md: private vulnerability reporting
-- [ ] **Your decisions**: issues on or off; then, on GitHub after publishing: Settings → Code security → turn on *Private vulnerability reporting*, *Secret scanning* and *Push protection*
+- [x] Issues on, with templates and an FAQ link
+- [ ] After publishing: Settings → Advanced Security → turn on *Private vulnerability reporting*, *Secret scanning* and *Push protection*; protect `main` against force-pushes and deletion
 - [ ] **Your call**: Settings → General → Change visibility → Public

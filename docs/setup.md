@@ -12,7 +12,7 @@ Jarvis Galaxy v1 runs on **Windows 10/11**.
 ## 2. Install
 
 ```powershell
-git clone https://github.com/<you>/jarvis-galaxy
+git clone https://github.com/Anikan09/jarvis-galaxy
 cd jarvis-galaxy
 python setup.py
 ```

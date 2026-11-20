@@ -1,10 +1,6 @@
 """OSINT, workspace and phone module self-checks. Offline: no lookups, no Google, no pushes."""
-import base64
-import io
 import os
 import re
-import shutil
-import tempfile
 import unittest
 import zlib
 from unittest import mock

@@ -11,7 +11,6 @@ Windows notification.
 """
 import datetime as dt
 import os
-import re
 import secrets
 import threading
 import time

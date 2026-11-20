@@ -7,7 +7,6 @@
 - Private ("private mode on"): every brain call goes to the local model; anything needing the internet is declined.
 """
 import ipaddress
-import os
 import re
 import threading
 import time

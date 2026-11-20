@@ -16,7 +16,7 @@ import time
 import unittest
 from unittest import mock
 
-from core import auth, brain, chat, config, modes, notes, reminders, research, server, vault
+from core import auth, brain, config, modes, notes, reminders, research, server, vault
 
 ROOT = config.ROOT
 

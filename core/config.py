@@ -23,8 +23,9 @@ DEFAULTS = {
     "expert_hours": 2,
     "lab_targets": [],
     "voice": "",
+    "voice_locale": "",
     "private_brain": {"url": "http://127.0.0.1:11434", "model": "qwen2.5:7b", "fallback": True},
-    "modules": {"workspace": False, "security": False, "osint": False, "private_brain": False, "phone": False},
+    "modules": {"workspace": False, "security": False, "osint": False, "phone": False},
 }
 
 _cache = {"mtime": None, "data": None}

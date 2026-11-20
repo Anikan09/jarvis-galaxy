@@ -8,7 +8,6 @@ import modules
 from core import config
 
 from . import demo_data
-from .common import report, row
 
 NAME = "security"
 

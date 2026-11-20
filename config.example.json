@@ -9,6 +9,7 @@
   "expert_hours": 2,
   "lab_targets": [],
   "voice": "",
+  "voice_locale": "",
   "private_brain": {
     "url": "http://127.0.0.1:11434",
     "model": "qwen2.5:7b",
@@ -18,7 +19,6 @@
     "workspace": false,
     "security": false,
     "osint": false,
-    "private_brain": false,
     "phone": false
   }
 }

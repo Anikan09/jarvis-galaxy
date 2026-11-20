@@ -39,8 +39,10 @@ Optional packages for those modules: `pip install -r requirements-optional.txt` 
 
 ## Quick start
 
+You need **Windows 10/11**, **Python 3.11+**, **Claude Code** logged in to your own Claude account, an **authenticator app** on your phone, and **Chrome or Edge**.
+
 ```powershell
-git clone https://github.com/<you>/jarvis-galaxy
+git clone https://github.com/Anikan09/jarvis-galaxy
 cd jarvis-galaxy
 python setup.py            # checks, config, notes folder, and the lock
 python -m core.server      # then open http://localhost:4747

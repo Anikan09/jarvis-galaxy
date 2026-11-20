@@ -4,7 +4,6 @@ import ipaddress
 import re
 import time
 
-import modules
 from core import brain, config
 
 NAME = "osint"

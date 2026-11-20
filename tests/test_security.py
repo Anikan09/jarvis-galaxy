@@ -6,13 +6,12 @@ import re
 import shutil
 import socket
 import tempfile
-import time
 import unittest
 from unittest import mock
 
 import modules
 import modules.security as sec
-from core import chat, config, modes, vault
+from core import chat, config, modes
 from modules.security import demo_data, files, network, watch, web
 
 

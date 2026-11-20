@@ -8,6 +8,7 @@ overwrites your config, notes or lock; it only fills in what's missing.
 """
 import os
 import shutil
+import importlib.util
 import subprocess
 import sys
 
@@ -33,10 +34,9 @@ def main():
             step(True, f"Claude Code {out}")
         except (OSError, subprocess.TimeoutExpired):
             step(False, "Claude Code didn't answer", "Run  claude  in a terminal to finish its setup.")
-    try:
-        import qrcode  # noqa: F401
+    if importlib.util.find_spec("qrcode"):
         step(True, "QR codes for the authenticator app")
-    except ImportError:
+    else:
         step(False, "QR codes for the authenticator app (optional)",
              "pip install qrcode  lets you scan a QR code instead of typing a 32-character key.")
     if not good:
