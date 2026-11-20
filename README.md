@@ -62,6 +62,8 @@ No third-party Python packages: the core is standard library only.
 
 The 3D galaxy uses [three.js](https://threejs.org) and [3d-force-graph](https://github.com/vasturiano/3d-force-graph), both MIT-licensed, loaded from jsdelivr with pinned integrity hashes.
 
+Some feature ideas, like the notes galaxy, the voice and flying to a note's source, were inspired by [zubair-trabzada](https://github.com/zubair-trabzada)'s Claude projects and his community, [AI Workshop](https://www.skool.com/aiworkshop-lite). The code here is written from scratch.
+
 ---
 
 Not affiliated with Marvel; "Jarvis" is used as a generic word for a butler AI. Released under the [MIT License](LICENSE).
