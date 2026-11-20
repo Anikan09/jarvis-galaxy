@@ -1,6 +1,6 @@
 """Apple iCloud Calendar over CalDAV, read-only, with an app-specific password (never your Apple ID password).
 
-  config.json:  "workspace": {"apple_id": "you@icloud.com", "apple_calendar": ""}     (empty calendar = all of them)
+  config.json:  "workspace": {"apple_id": "your-apple-id@example.com", "apple_calendar": ""}     (empty calendar = all of them)
   password:     python -m core.vault set apple_app_password      (make one at account.apple.com → App-Specific Passwords)
 
 Needs: pip install caldav

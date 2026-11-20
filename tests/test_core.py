@@ -259,6 +259,27 @@ class ServerTests(TempDir):
 class PrivacyTests(unittest.TestCase):
     """Nothing in the repo may carry a personal path, address or secret."""
 
+    EMAIL = r"[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}\b"
+    ALLOWED = r"(example\.(com|org|net)|\.(example|invalid|test)|users\.noreply\.github\.com|anthropic\.com)$"
+
+    def test_the_checks_themselves_work(self):
+        """A broken pattern once let this test pass without really looking: never again."""
+        real = "someone.real" + "@" + "gmail.com"                  # assembled here, so this file never holds a real-looking address
+        self.assertEqual(re.findall(self.EMAIL, f"write to {real}, not three@0.149.0"), [real])
+        self.assertTrue(re.search(self.ALLOWED, "jane@home.example"))
+        self.assertFalse(re.search(self.ALLOWED, real))
+
+    def test_no_invisible_control_characters(self):
+        bad = []
+        for root, dirs, files in os.walk(ROOT):
+            dirs[:] = [d for d in dirs if d not in (".git", "data", "__pycache__", "notes")]
+            for f in files:
+                if f.endswith((".py", ".js", ".html", ".css", ".md", ".json", ".yml", ".txt")):
+                    with open(os.path.join(root, f), "rb") as fh:
+                        if any(c < 32 and c not in (9, 10, 13) for c in fh.read()):
+                            bad.append(os.path.join(root, f))
+        self.assertEqual(bad, [])
+
     def test_no_personal_paths_or_addresses(self):
         bad = []
         for root, dirs, files in os.walk(ROOT):
@@ -271,8 +292,8 @@ class PrivacyTests(unittest.TestCase):
                     text = fh.read()
                 if re.search(r"[A-Za-z]:\\\\?Users\\\\?[A-Za-z]", text) and f != "test_core.py":
                     bad.append((p, "a user folder path"))
-                for addr in re.findall(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}", text):
-                    if not re.search(r"(example\.(com|org)|users\.noreply\.github\.com|anthropic\.com)$", addr):
+                for addr in re.findall(self.EMAIL, text):
+                    if not re.search(self.ALLOWED, addr):
                         bad.append((p, addr))
         self.assertEqual(bad, [])
 

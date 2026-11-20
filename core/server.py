@@ -128,7 +128,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 return self.send_json(200, {"entries": activity.recent()})
             if path == "/api/mode":
                 return self.send_json(200, {**modes.state(), "name": config.get("assistant_name"), "voice": config.get("voice"),
-                                            "language": config.get("language"), "locked": not unlocked_demo()})
+                                            "language": config.get("language"), "locale": config.locale(), "locked": not unlocked_demo()})
             if path == "/api/reminders/due":
                 LAST_TAB["at"] = time.time()
                 return self.send_json(200, {"due": [{"id": r["id"], "text": r["text"], "kind": r.get("kind", "reminder")} for r in reminders.due()]})

@@ -61,6 +61,17 @@ def get(key, default=None):
     return load().get(key, default)
 
 
+LOCALES = {"english": "en-GB", "british english": "en-GB", "american english": "en-US", "german": "de-DE", "deutsch": "de-DE",
+           "spanish": "es-ES", "french": "fr-FR", "italian": "it-IT", "portuguese": "pt-PT", "dutch": "nl-NL", "polish": "pl-PL",
+           "turkish": "tr-TR", "swedish": "sv-SE", "danish": "da-DK", "norwegian": "nb-NO", "japanese": "ja-JP", "korean": "ko-KR",
+           "chinese": "zh-CN", "russian": "ru-RU", "arabic": "ar-SA", "hindi": "hi-IN"}
+
+
+def locale():
+    """The voice and microphone language: config "voice_locale" if set, else the one that goes with "language"."""
+    return str(get("voice_locale") or LOCALES.get(str(get("language") or "English").strip().lower(), "en-GB"))
+
+
 def demo():
     return os.environ.get("JARVIS_DEMO") == "1"
 

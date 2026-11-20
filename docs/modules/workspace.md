@@ -26,7 +26,7 @@ You use **your own** Google Cloud OAuth client, so no one else's app ever touche
 1. `pip install caldav`
 2. Make an **app-specific password** at [account.apple.com](https://account.apple.com) → Sign-In and Security → App-Specific Passwords. Never use your Apple ID password.
 3. `python -m core.vault set apple_app_password` (typed hidden, stored encrypted)
-4. In `config.json`: `"workspace": { "apple_id": "you@icloud.com", "apple_calendar": "" }` (empty = all calendars).
+4. In `config.json`: `"workspace": { "apple_id": "your-apple-id@example.com", "apple_calendar": "" }` (empty = all calendars).
 
 ## What leaves the PC
 

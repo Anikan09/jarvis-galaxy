@@ -22,15 +22,28 @@
 
   // ---------- Voice out ----------
   let mode = {};
-  function speak(text) {
+  // Chrome loads its voice list late: keep it current, and never fall back to the system's default language by accident.
+  let voices = [];
+  const loadVoices = () => { voices = window.speechSynthesis ? speechSynthesis.getVoices() : []; };
+  if (window.speechSynthesis) { loadVoices(); speechSynthesis.addEventListener('voiceschanged', loadVoices); }
+  const MALE = /\b(?:male|george|ryan|daniel|thomas|guy|brian|arthur|oliver|sean)\b/i;
+  function pickVoice() {
+    const loc = (mode.locale || 'en-GB').toLowerCase(), lang = loc.split('-')[0];
+    const wanted = (mode.voice || '').toLowerCase();
+    const same = v => v.lang.toLowerCase().replace('_', '-') === loc;
+    return voices.find(v => wanted && v.name.toLowerCase().startsWith(wanted))
+        || voices.find(v => same(v) && MALE.test(v.name) && !/female/i.test(v.name))
+        || voices.find(v => same(v))
+        || voices.find(v => v.lang.toLowerCase().startsWith(lang + '-')) || null;
+  }
+  function speak(text, tries = 0) {
     if (!('speechSynthesis' in window) || !text) return;
+    if (!voices.length && tries < 8) return setTimeout(() => speak(text, tries + 1), 250);   // the list is still loading
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text.replace(/\(Answered by the private brain[^)]*\)/, ''));
-    const voices = speechSynthesis.getVoices();
-    const wanted = (mode.voice || '').toLowerCase();
-    u.voice = voices.find(v => wanted && v.name.toLowerCase().startsWith(wanted))
-           || voices.find(v => /en-GB/i.test(v.lang) && /male|george|ryan|daniel/i.test(v.name))
-           || voices.find(v => /en-GB/i.test(v.lang)) || null;
+    const v = pickVoice();
+    if (v) u.voice = v;
+    u.lang = v ? v.lang : (mode.locale || 'en-GB');      // even without a matching voice, read it as the right language
     speechSynthesis.speak(u);
   }
 
@@ -287,7 +300,7 @@
   if (!Rec) $('mic').hidden = true;
   $('mic').addEventListener('click', () => {
     const r = new Rec();
-    r.lang = navigator.language || 'en-GB';
+    r.lang = mode.locale || 'en-GB';                     // the language Jarvis speaks, not the browser's (often the region's)
     r.interimResults = false;
     $('mic').classList.add('on');
     r.onresult = e => ask(e.results[0][0].transcript);
