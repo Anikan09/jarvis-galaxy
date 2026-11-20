@@ -54,7 +54,7 @@ No third-party Python packages: the core is standard library only.
 
 ## Docs
 
-[Setup](docs/setup.md) · [Configuration](docs/configuration.md) · [Security design](docs/security.md) · [Private brain](docs/private-brain.md) · [Security](docs/modules/security.md) · [OSINT](docs/modules/osint.md) · [Workspace](docs/modules/workspace.md) · [Phone](docs/modules/phone.md) · [Design](docs/DESIGN.md)
+[Setup](docs/setup.md) · [FAQ](docs/FAQ.md) · [Configuration](docs/configuration.md) · [Security design](docs/security.md) · [Private brain](docs/private-brain.md) · [Security](docs/modules/security.md) · [OSINT](docs/modules/osint.md) · [Workspace](docs/modules/workspace.md) · [Phone](docs/modules/phone.md) · [Design](docs/DESIGN.md)
 
 ## Credits
 

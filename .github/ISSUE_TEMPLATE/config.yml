@@ -3,6 +3,9 @@ contact_links:
   - name: Report a security vulnerability (privately)
     url: https://github.com/Anikan09/jarvis-galaxy/security/advisories/new
     about: Please don't open a public issue for a security problem. Use this private form instead.
+  - name: FAQ (changing the look, the voice, the name, and more)
+    url: https://github.com/Anikan09/jarvis-galaxy/blob/main/docs/FAQ.md
+    about: Most "how do I…" questions are answered here.
   - name: Setup help and documentation
     url: https://github.com/Anikan09/jarvis-galaxy/blob/main/docs/setup.md
     about: Installation, the lock, troubleshooting, and every module's page.
