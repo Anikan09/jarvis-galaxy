@@ -279,9 +279,15 @@ def setup(reset=False):
         else:
             break
     secret = new_secret()
-    print("\nAdd it to your authenticator app (Microsoft Authenticator, Google Authenticator, 2FAS, Aegis...).")
-    print("Scan the QR code above, or" if _show_qr(otpauth_uri(secret)) else "Choose 'Enter a setup key' and type:", end="")
-    print(f"\n\n   Account: {ISSUER}\n   Key:     {' '.join(secret[i:i + 4] for i in range(0, len(secret), 4))}\n   Type:    time-based\n")
+    print("\nNow add it to your authenticator app (Microsoft Authenticator, Google Authenticator, 2FAS, Aegis...).\n")
+    if _show_qr(otpauth_uri(secret)):
+        print("Scan the QR code above with the app (make this window bigger if it won't scan), or enter the key below by hand.")
+    else:
+        print("In the app, choose 'Enter a setup key' (or 'Enter code manually') and type the key below.")
+        print("Easier: press Ctrl+C, run  pip install qrcode , then  python setup.py  again, and scan a QR code instead.")
+    print(f"\n   Account: {ISSUER}\n   Key:     {secret}\n            (all {len(secret)} characters, without spaces)\n   Type:    time-based\n")
+    print(f"   The same key in groups, to check what you typed:  {' '.join(secret[i:i + 4] for i in range(0, len(secret), 4))}")
+    print("   It only uses the letters A-Z and the digits 2-7: a 0 is the letter O, a 1 is the letter I, an 8 is the letter B.\n")
     for _ in range(3):
         step = match_totp(secret, input("Type the 6-digit code the app shows now: ").strip())
         if step is not None:

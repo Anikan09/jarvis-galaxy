@@ -17,6 +17,8 @@ cd jarvis-galaxy
 python setup.py
 ```
 
+Tip: `pip install qrcode` first, and setup shows a QR code to scan instead of a 32-character key to type.
+
 `setup.py` checks the requirements, creates `config.json` and your notes folder, and sets up the lock: a password
 (at least 12 characters) and your authenticator app. Write down the recovery codes it shows, somewhere that isn't this PC.
 Run it in PowerShell or Windows Terminal: the password prompt hides what you type there.
@@ -53,6 +55,7 @@ Things to try:
 |---|---|
 | "The claude command wasn't found" | Install Claude Code and open a new terminal, so the PATH updates. |
 | "Claude Code error: … log in" | Run `claude` in a terminal and use `/login`. |
+| The app says "illegal character" | Type the key without spaces. It only uses A–Z and 2–7: a 0 is the letter O, a 1 is I, an 8 is B. Or `pip install qrcode` and run setup again to scan a QR code. |
 | Codes from the app never match | Delete the entry in the app, run `python -m core.auth --reset` (or delete `data/auth.json` and run setup again), and check the phone's clock is set automatically. |
 | Forgot the password and lost the recovery codes | Delete `data/auth.json` and run `python setup.py`. Only someone who can already open the project folder can do that. |
 | The galaxy doesn't appear | The 3D libraries load from cdn.jsdelivr.net with a pinned hash: check the internet connection. |

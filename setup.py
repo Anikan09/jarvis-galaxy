@@ -33,6 +33,12 @@ def main():
             step(True, f"Claude Code {out}")
         except (OSError, subprocess.TimeoutExpired):
             step(False, "Claude Code didn't answer", "Run  claude  in a terminal to finish its setup.")
+    try:
+        import qrcode  # noqa: F401
+        step(True, "QR codes for the authenticator app")
+    except ImportError:
+        step(False, "QR codes for the authenticator app (optional)",
+             "pip install qrcode  lets you scan a QR code instead of typing a 32-character key.")
     if not good:
         sys.exit("\nFix the items above, then run setup again.")
 
